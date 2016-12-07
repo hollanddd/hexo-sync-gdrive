@@ -112,7 +112,7 @@ syncDrive:
 
 `token_name`:
 
-* desc: Name of token to revrieve from token dir.
+* desc: Name of token to retrieve from token dir.
 
 * default: hexo-sync-gdrive.json
 
