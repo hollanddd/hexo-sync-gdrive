@@ -28,27 +28,27 @@ var SCOPES = [
 console_opts = {
   usage: 'sync-gdrive [options]',
   options: [
-      {name: '-l, --list-folders', desc: 'list folders in gdrive for identifying gdrive folder id'},
-      {name: '-d, --drafts', desc: 'sync drafts from Google Drive'},
-      {name: '-p, --posts',  desc: 'sync posts from Google Drive'}
-    ]
+    {name: '-l, --list-folders', desc: 'list folders in gdrive for identifying gdrive folder id'},
+    {name: '-d, --drafts', desc: 'sync drafts from Google Drive'},
+    {name: '-p, --posts',  desc: 'sync posts from Google Drive'}
+  ]
 }
 
 hexo.extend.console.register('sync-gdrive', '', console_opts, function(args) {
   var options = _.extend({}, defaults, hexo.config.syncDrive);
   var func;
 
-  if (args.l) {
+  if (args.l || args.listFolders) {
     func = listFolders;
-  } else if (args.p) {
+  } else if (args.p || args.posts)  {
     func = syncGoogleDrive;
     options.folder_id = options.gdrive_posts_folder_id
     options.dest_dir  = hexo.source_dir + options.posts + '/';
-  } else if(args.d) {
+  } else if (args.d || args.drafts) {
     func = syncGoogleDrive;
     options.folder_id = options.gdrive_drafts_folder_id
     options.dest_dir  = hexo.source_dir + options.drafts + '/';
-  } 
+  }
 
   fs.readFile(SECRET_PATH, (err, content) => {
     if (err) {
@@ -143,7 +143,7 @@ hexo.extend.console.register('sync-gdrive', '', console_opts, function(args) {
     var service = google.drive('v3');
     var folder_id = options.folder_id;
     var dest_dir = options.dest_dir;
-    
+
     if (!folder_id) throw Exception('The Google folder id for posts is empty. Try running hexo sync-gdrive -l to list your folder\'s id.')
     service.files.list({
       q: "mimeType=\'text/markdown\' and trashed=false and \'" + folder_id + "\' in parents",
@@ -155,17 +155,17 @@ hexo.extend.console.register('sync-gdrive', '', console_opts, function(args) {
         console.log('The API returned an error: ' + err);
         return;
       }
-      
+
       var files = response.files;
       if (files.length == 0) {
         console.log('No files found.');
         return;
       }
-      
+
       for (var i = 0; i < files.length; i++) {
         var file = files[i];
         var dest = fs.createWriteStream(dest_dir + file.name);
-        
+
         service.files.get({
           auth: auth,
           fileId: file.id,
