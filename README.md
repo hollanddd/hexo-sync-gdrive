@@ -73,7 +73,7 @@ $ hexo sync-gdrive --posts
 Pull drafts from Google Drive. The drafts folder id must be populated in `_config.yml` for this to work.
 
 ```
-$ hexo sync-gdrive --list-folders
+$ hexo sync-gdrive --drafts
 ```
 
 ## Options
