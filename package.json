@@ -1,6 +1,6 @@
 {
   "name": "hexo-sync-gdrive",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Hexo plugin for retrieving markdown files from Google Drive with the Google Drive API.",
   "main": "index.js",
   "scripts": {},
